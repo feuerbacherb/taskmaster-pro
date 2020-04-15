@@ -45,7 +45,7 @@ var loadTasks = function() {
 };
 
 var saveTasks = function() {
-  console.log("Entering saveTasks: " + tasks);
+  //console.log("Entering saveTasks: " + tasks);
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
@@ -56,15 +56,23 @@ $(".card .list-group").sortable({
   helper: "clone",
   activate: function(event) {
     //console.log("activate", this);
+    $(this).addClass("dropover");
+    $(".bottom-trash").addClass("bottom-trash-drag");
   },
   deactivate: function(event) {
     //console.log("deactivate", this);
+    $(this).removeClass("dropover");
+    $(".bottom-trash").removeClass("bottom-trash-drag");
   },
   over: function(event) {
     //console.log("over", event.target);
+    $(event.target).addClass("dropover-active");
+    $(".bottom-trash").addClass("bottom-trash-active");
   },
   out: function(event) {
     //console.log("out", event.target);
+    $(event.target).removeClass("dropover-active");
+    $(".bottom-trash").removeClass("bottom-trash-active");
   },
   update: function(event) {
     // array to store the task data in
@@ -99,7 +107,7 @@ $(".card .list-group").sortable({
 
     saveTasks();
 
-    console.log(tempArr);
+    //console.log(tempArr);
   }
 });
 
@@ -123,7 +131,7 @@ $(".list-group").on("click", "span", function() {
 
   // enable jquery ui datepicker
   dateInput.datepicker({
-    //minDate: 1,
+    minDate: 1,
     onClose: function() {
       // when calendar is closed, force a "change" event on the 'dateInput'
       $(this).trigger("change");
@@ -167,6 +175,12 @@ $(".list-group").on("change", "input[type='text']", function() {
   // Pass task's <li> element into auditTask() to check new due date
   auditTask($(taskSpan).closest(".list-group-item"));
 });
+
+setInterval(function() {
+  $(".card .list-group-item").each(function(el) {
+    auditTask(el);
+  });
+}, (1000 * 60) * 30);
 
 // modal was triggered
 $("#task-form-modal").on("show.bs.modal", function() {
@@ -278,6 +292,8 @@ $(".list-group").on("blur", "textarea", function() {
 var auditTask = function(taskE1) {
   // get date from task element
   var date = $(taskE1).find("span").text().trim();
+
+  console.log(taskE1);
   
   // convert to moment object at 5:00 pm
   var time = moment(date, "L").set("hour", 17);
@@ -291,6 +307,9 @@ var auditTask = function(taskE1) {
   } 
   else if (Math.abs(moment().diff(time, "days")) <= 2) {
     $(taskE1).addClass("list-group-item-warning");
+  }
+  else {
+    $(taskE1).addClass("list-group-item");
   }
 };
 
