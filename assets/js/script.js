@@ -45,7 +45,7 @@ var loadTasks = function() {
 };
 
 var saveTasks = function() {
-  //console.log("Entering saveTasks: " + tasks);
+  console.log("Entering saveTasks: " + tasks);
   localStorage.setItem("tasks", JSON.stringify(tasks));
 };
 
@@ -195,7 +195,7 @@ $("#task-form-modal").on("shown.bs.modal", function() {
 });
 
 // save button in modal was clicked
-$("#task-form-modal .btn-primary").click(function() {
+$("#task-form-modal .btn-save").click(function() {
   // get form values
   var taskText = $("#modalTaskDescription").val();
   var taskDate = $("#modalDueDate").val();
