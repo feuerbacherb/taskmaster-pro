@@ -60,6 +60,8 @@ $(".list-group").on("blur", "textarea", function () {
   // get the task's position in the list of other li elements
   var index = $(this).closest(".list-group-item").index();
 
+  console.log(text, status, index);
+
   tasks[status][index].text = text;
   saveTasks();
 
